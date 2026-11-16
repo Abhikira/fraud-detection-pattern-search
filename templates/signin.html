@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="description" content="Sign in to Detectorite transaction review.">
+  <title>Sign in | Detectorite</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="auth-brand">
+    <a class="brand" href="{{ url_for('signin') }}"><img class="brand-mark" src="{{ url_for('static', filename='favicon.svg') }}" alt=""><span>Detectorite <small>TRANSACTION REVIEW</small></span></a>
+  </header>
+  <main class="auth-main">
+    <section class="auth-card">
+      <p class="eyebrow">Welcome back</p>
+      <h1>Sign in</h1>
+      <p class="auth-copy">Use your Gmail or Proton address to continue.</p>
+      {% if error %}<p class="message auth-error" role="alert">{{ error }}</p>{% endif %}
+      <form method="post" action="{{ url_for('signin') }}" class="auth-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Email address<input type="email" name="email" autocomplete="username" maxlength="254" value="{{ email or '' }}" required></label>
+        <label>Password
+          <div class="auth-password-control">
+            <input id="signin-password" type="password" name="password" autocomplete="current-password" required>
+            <button class="button button-small password-toggle" type="button" data-password-target="signin-password" aria-label="Show password" title="Show password" aria-pressed="false">
+              <svg class="password-icon eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+              <svg class="password-icon eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="m3 3 18 18"/><path d="M10.6 6.2A10.7 10.7 0 0 1 12 6c6.4 0 10 6 10 6a15.7 15.7 0 0 1-3.1 3.6"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 6 10 6c1 0 2-.2 2.8-.5"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+            </button>
+          </div>
+        </label>
+        <button class="button button-primary" type="submit">Sign in</button>
+      </form>
+      <p class="auth-switch">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+      <p class="auth-note">Email addresses are not verified. Use an account you control.</p>
+    </section>
+  </main>
+  <footer class="footer"><span>Detectorite</span><nav aria-label="Legal information"><a href="{{ url_for('privacy') }}">Privacy</a><a href="{{ url_for('terms') }}">Terms</a></nav></footer>
+  <script src="{{ url_for('static', filename='auth.js') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Privacy information for Detectorite transaction review.">
+  <title>Privacy | Detectorite</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('signin') }}"><img class="brand-mark" src="{{ url_for('static', filename='favicon.svg') }}" alt=""><span>Detectorite <small>TRANSACTION REVIEW</small></span></a>
+    <a class="back-link" href="{{ url_for('signin') }}">Back to sign in</a>
+  </header>
+  <main class="legal-page">
+    <p class="eyebrow">Legal information</p>
+    <h1>Privacy</h1>
+    <p class="updated">Last reviewed: 13 November 2026</p>
+    <article>
+      <h2>Information this application handles</h2>
+      <p>When you scan transactions, the application receives the account reference, amount, and description that you submit, either as pasted text or as CSV rows. It stores accepted transaction records and matching detection results in the MySQL database configured by the operator. Pattern phrases, their categories, and severity settings are also stored there.</p>
+      <p>For registered users, the database stores an email address, account role and status, and a salted password hash. Passwords are not stored as plaintext. Sign-in uses a session cookie. Registration is limited to Gmail and Proton email domains, but addresses are not verified.</p>
+      <h2>How information is used</h2>
+      <p>Submitted information is used to compare descriptions against the configured pattern library, display scan results, and populate the transaction and detection history. A match is a text comparison and should not be treated as a conclusion that a person or transaction is fraudulent.</p>
+      <h2>Storage and retention</h2>
+      <p>Records remain in the configured database until an operator removes them or applies a retention process. This application does not currently provide transaction deletion or retention controls in its interface. Contact the person or organization operating this installation to ask about database access, backups, retention, or deletion.</p>
+      <h2>Access and sharing</h2>
+      <p>Users can view only their own transactions and detections. The configured administrator can manage account status but cannot view another user's transaction records. The administrator can add and delete shared suspicious-language patterns. Anyone able to reach the registration page can create an account, so the operator must restrict network access and secure the application and database.</p>
+      <p>The application sends submitted data to the server hosting the installation and stores it in the configured database. The application code does not intentionally send transaction contents to an analytics or advertising service. Hosting, network, logging, and backup providers chosen by the operator may process technical or stored data under their own practices.</p>
+      <h2>Your choices and questions</h2>
+      <p>Do not submit data you are not authorized to process. For questions about access, correction, deletion, or this notice, contact the operator of the installation. The operator should replace this notice with organization-specific information and contact details before making the service available to others.</p>
+      <h2>Changes</h2>
+      <p>The operator may update this notice when the application or its data practices change. The date above indicates when this template was last reviewed; it does not identify a particular operator or jurisdiction.</p>
+    </article>
+  </main>
+  <footer class="footer"><span>Detectorite transaction review</span><nav aria-label="Legal information"><a href="{{ url_for('privacy') }}">Privacy</a><a href="{{ url_for('terms') }}">Terms</a></nav></footer>
+</body>
+</html>

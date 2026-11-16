@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Terms for using Detectorite transaction review.">
+  <title>Terms | Detectorite</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('signin') }}"><img class="brand-mark" src="{{ url_for('static', filename='favicon.svg') }}" alt=""><span>Detectorite <small>TRANSACTION REVIEW</small></span></a>
+    <a class="back-link" href="{{ url_for('signin') }}">Back to sign in</a>
+  </header>
+  <main class="legal-page">
+    <p class="eyebrow">Legal information</p>
+    <h1>Terms of use</h1>
+    <p class="updated">Last reviewed: 13 November 2026</p>
+    <article>
+      <h2>Purpose of the application</h2>
+      <p>This application compares transaction descriptions with a configurable phrase library and records matches for review. It is an informational tool, not a financial, legal, compliance, or security advisory service.</p>
+      <h2>Human review is required</h2>
+      <p>Phrase matching can produce false positives and miss suspicious activity that does not contain a configured phrase. A severity label reflects the library configuration, not a verified finding. Do not block payments, accuse a person, or make another consequential decision solely because of an application result. Use independent checks and established review procedures.</p>
+      <h2>Authorized use and information submitted</h2>
+      <p>Use the application only for lawful purposes and with authority to process the transaction information you submit. You are responsible for reviewing uploaded CSV content, protecting sensitive data, and following applicable organizational rules. Do not use the service to upload information that you are not authorized to handle.</p>
+      <h2>Accounts</h2>
+      <p>Self-registration is available to Gmail and Proton addresses. Email ownership is not verified. Keep your password confidential and notify the operator if you believe your account is being misused. The configured administrator can manage account status and the shared pattern library but cannot view another user's transaction records.</p>
+      <h2>Access and security</h2>
+      <p>Sign-in and role checks protect application pages and APIs. The operator must still restrict network access and configure secure hosting, HTTPS, a persistent session secret, database credentials, backups, and monitoring before exposing the service publicly.</p>
+      <h2>Availability and changes</h2>
+      <p>The application is provided as-is, without a guarantee of uninterrupted availability, error-free results, or suitability for a particular purpose. The operator may change, suspend, or remove the service and its records. Database backups and retention are controlled by the operator.</p>
+      <h2>Operator-specific terms</h2>
+      <p>These general terms do not identify an operator, governing law, or dispute process. The person or organization deploying this software should review these terms, add applicable contact and jurisdiction details, and obtain appropriate legal review before offering the application to users.</p>
+    </article>
+  </main>
+  <footer class="footer"><span>Detectorite transaction review</span><nav aria-label="Legal information"><a href="{{ url_for('privacy') }}">Privacy</a><a href="{{ url_for('terms') }}">Terms</a></nav></footer>
+</body>
+</html>

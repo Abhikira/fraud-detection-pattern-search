@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Review transaction descriptions against Detectorite's suspicious-language rules.">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Detectorite | Transaction Review</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Detectorite transaction review home">
+      <img class="brand-mark" src="{{ url_for('static', filename='favicon.svg') }}" alt="">
+      <span>Detectorite <small>TRANSACTION REVIEW</small></span>
+    </a>
+    <nav class="tabs" aria-label="Workspace sections">
+      <button class="tab active" type="button" data-tab="scan" aria-pressed="true">Scan</button>
+      <button class="tab" type="button" data-tab="dash" aria-pressed="false">Dashboard</button>
+      {% if is_admin %}
+      <button class="tab" type="button" data-tab="pats" aria-pressed="false">Patterns</button>
+      <button class="tab" type="button" data-tab="users" aria-pressed="false">Users</button>
+      {% endif %}
+    </nav>
+    <div class="account-menu">
+      <span class="account-email">{{ g.user.email }}</span>
+      {% if is_admin %}<span class="role-label">ADMIN</span>{% endif %}
+      <form action="{{ url_for('logout') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="button button-small" type="submit">Sign out</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p class="eyebrow">Transaction review workspace</p>
+      <h1>Check a transaction against known fraud phrases.</h1>
+      <p class="intro-copy">Enter the account and transaction details, then review any matching phrases.</p>
+    </section>
+
+    <section id="scan" class="panel active" aria-labelledby="scan-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">01 / Analyze</p><h2 id="scan-title">Scan transactions</h2></div>
+        <span class="engine-note">Case-insensitive text matching</span>
+      </div>
+      <div class="scan-layout">
+        <div class="card scan-card">
+          <form id="scan-form">
+            <label class="field-label" for="account_ref">Account number or reference</label>
+            <input id="account_ref" name="account_ref" maxlength="50" placeholder="ACC-2041" required>
+            <label class="field-label transaction-label" for="amount">Transaction amount</label>
+            <input id="amount" name="amount" type="number" min="0" step="0.01" placeholder="1250.00" required>
+            <label class="field-label transaction-label" for="txt">Transaction description</label>
+            <textarea id="txt" placeholder="Describe the transaction" required></textarea>
+            <div class="form-actions">
+              <button class="button button-secondary" type="button" id="sample">Load example</button>
+              <button class="button button-primary" type="submit">Run detection <span aria-hidden="true">&rarr;</span></button>
+            </div>
+            <fieldset class="algorithm-choice">
+              <legend>Matching algorithm</legend>
+              <label><input type="radio" name="algo" value="KMP" checked> KMP</label>
+              <label><input type="radio" name="algo" value="RABIN_KARP"> Rabin-Karp</label>
+            </fieldset>
+          </form>
+          <div class="divider"><span>or scan a file</span></div>
+          <form id="upload-form" class="upload-form">
+            <label class="field-label" for="file">CSV file</label>
+            <p class="field-help">Expected columns: account_ref, description, amount.</p>
+            <div class="form-actions upload-actions">
+              <input type="file" id="file" accept=".csv,text/csv" required>
+              <button class="button button-secondary" type="submit">Upload and scan</button>
+            </div>
+          </form>
+          <p class="message" id="err" role="alert"></p>
+          <p class="review-note"><strong>For review:</strong> a text match is a signal, not proof of fraud.</p>
+        </div>
+      </div>
+      <div id="out" class="results" aria-live="polite"></div>
+    </section>
+
+    <section id="dash" class="panel" aria-labelledby="dashboard-title" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">02 / Records</p><h2 id="dashboard-title">Dashboard</h2></div>
+        <button class="button button-secondary" type="button" id="refresh-dash">Refresh records</button>
+      </div>
+      <p id="dash-error" class="message" role="alert"></p>
+      <div class="stats" id="stats"></div>
+      <div class="card table-card">
+        <div class="table-heading"><div><p class="eyebrow">Latest records</p><h3>Stored transactions</h3></div><span>Most recent 200</span></div>
+        <div class="table-scroll"><table><thead><tr><th>ID</th><th>Transaction</th><th>Amount</th><th>Time</th><th>Matches</th><th>Risk</th></tr></thead><tbody id="tx"></tbody></table></div>
+      </div>
+      <div class="card table-card">
+        <div class="table-heading"><div><p class="eyebrow">Latest records</p><h3>Detection history</h3></div><span>Most recent 300</span></div>
+        <div class="table-scroll"><table><thead><tr><th>Transaction</th><th>Pattern</th><th>Category</th><th>Algorithm</th><th>Count</th><th>Positions</th><th>Risk</th><th>Detected</th></tr></thead><tbody id="det"></tbody></table></div>
+      </div>
+    </section>
+
+    {% if is_admin %}
+    <section id="pats" class="panel" aria-labelledby="patterns-title" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">03 / Configuration</p><h2 id="patterns-title">Pattern library</h2></div>
+        <span class="engine-note">Changes apply to future scans</span>
+      </div>
+      <div class="card pattern-form-card">
+        <p class="eyebrow" id="pattern-form-heading">Add a matching phrase</p>
+        <form id="pattern-form" class="pattern-form">
+          <label>Pattern text<input id="pt" name="pattern_text" maxlength="255" placeholder="For example: payment release fee" required></label>
+          <label>Category<input id="pc" name="category" maxlength="60" placeholder="For example: Advance-fee scam" required></label>
+          <label>Severity<select id="ps" name="severity"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option></select></label>
+          <div class="pattern-form-actions">
+            <button class="button button-primary" id="pattern-submit" type="submit">Add pattern <span aria-hidden="true">&rarr;</span></button>
+            <button class="button button-secondary" id="pattern-cancel" type="button" hidden>Cancel</button>
+          </div>
+        </form>
+        <p id="perr" class="message" role="alert"></p>
+      </div>
+      <div class="card table-card">
+        <div class="table-heading"><div><p class="eyebrow">Active rules</p><h3>Phrase and severity</h3></div></div>
+        <div class="table-scroll"><table><thead><tr><th>Pattern</th><th>Category</th><th>Severity</th><th><span class="visually-hidden">Actions</span></th></tr></thead><tbody id="pl"></tbody></table></div>
+        <p id="patterns-error" class="message" role="alert"></p>
+      </div>
+    </section>
+    <section id="users" class="panel" aria-labelledby="users-title" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">04 / Accounts</p><h2 id="users-title">Manage users</h2></div>
+      </div>
+      <p id="users-error" class="message" role="alert"></p>
+      <div class="card table-card">
+        <div class="table-scroll"><table><thead><tr><th>ID</th><th>Email</th><th>Role</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr></thead><tbody id="user-list"></tbody></table></div>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+
+  <footer class="footer">
+    <span>Detectorite transaction review</span>
+    <nav aria-label="Legal information"><a href="{{ url_for('privacy') }}">Privacy</a><a href="{{ url_for('terms') }}">Terms</a></nav>
+  </footer>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
