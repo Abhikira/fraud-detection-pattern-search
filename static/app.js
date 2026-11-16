@@ -6,9 +6,9 @@ const escapeHtml = value => String(value).replace(/[&<>"]/g, char => ({
 const badge = risk => `<span class="badge ${risk}">${risk}</span>`;
 const SAMPLE = {
   account_ref: 'ACC-1002',
-  amount: '45000',
   description: 'URGENT WIRE TRANSFER needed - buy gift card and send code now'
 };
+const reportDialog = $('#report-dialog');
 
 async function api(url, options = {}) {
   const headers = { ...(options.headers || {}) };
@@ -48,10 +48,13 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 $('#sample').addEventListener('click', () => {
   $('#account_ref').value = SAMPLE.account_ref;
-  $('#amount').value = SAMPLE.amount;
   $('#txt').value = SAMPLE.description;
 });
 $('#refresh-dash').addEventListener('click', loadDashboard);
+$('#close-report').addEventListener('click', () => reportDialog.close());
+reportDialog.addEventListener('click', event => {
+  if (event.target === reportDialog) reportDialog.close();
+});
 
 function highlight(text, matches) {
   const spans = matches.flatMap(match => match.positions.map(position => [position, position + match.length]))
@@ -70,12 +73,13 @@ function showResults(data) {
   $('#out').innerHTML = `<div class="card table-card"><div class="table-heading"><div><p class="eyebrow">Scan complete</p><h3>Results · ${escapeHtml(data.algorithm.replace('_', '-'))}</h3></div><span>${data.results.length} transaction(s)</span></div>` +
     data.results.map(result => `
       <article class="result-card">
-        <div class="result-heading"><span>#${result.id} · ${escapeHtml(result.account_ref)} · ${escapeHtml(result.amount)}</span>${badge(escapeHtml(result.risk))}</div>
+        <div class="result-heading"><span>#${result.id} · ${escapeHtml(result.account_ref)}</span>${badge(escapeHtml(result.risk))}</div>
         <p class="result-description">${highlight(result.description, result.matches)}</p>
         <div class="chips">${result.matches.map(match =>
           `<span class="chip">${escapeHtml(match.pattern)} · ${escapeHtml(match.category)} · ${match.count} match(es) at [${escapeHtml(match.positions.join(', '))}] · ${badge(escapeHtml(match.severity))}</span>`
         ).join('') || '<span class="chip">No library phrases matched</span>'}</div>
       </article>`).join('') + '</div>';
+  reportDialog.showModal();
 }
 
 function selectedAlgorithm() {
@@ -87,7 +91,6 @@ $('#scan-form').addEventListener('submit', async event => {
   $('#err').textContent = '';
   const transactions = [{
     account_ref: $('#account_ref').value.trim(),
-    amount: $('#amount').value,
     description: $('#txt').value.trim()
   }];
   try {
@@ -130,8 +133,8 @@ async function loadDashboard() {
       ['Detections', stats.detections], ['Patterns', stats.patterns]
     ].map(([label, value]) => `<div class="stat"><strong>${escapeHtml(value)}</strong><span>${label}</span></div>`).join('');
     $('#tx').innerHTML = transactions.map(row =>
-      `<tr><td>${escapeHtml(row.id)}</td><td><strong>${escapeHtml(row.account_ref)}</strong><br>${escapeHtml(row.description)}</td><td>${escapeHtml(row.amount)}</td><td>${escapeHtml(row.created_at)}</td><td>${escapeHtml(row.hits)}</td><td>${badge(escapeHtml(row.risk))}</td></tr>`
-    ).join('') || '<tr><td colspan="6">No stored transactions.</td></tr>';
+      `<tr><td>${escapeHtml(row.id)}</td><td><strong>${escapeHtml(row.account_ref)}</strong><br>${escapeHtml(row.description)}</td><td>${escapeHtml(row.created_at)}</td><td>${escapeHtml(row.hits)}</td><td>${badge(escapeHtml(row.risk))}</td></tr>`
+    ).join('') || '<tr><td colspan="5">No stored transactions.</td></tr>';
     $('#det').innerHTML = detections.map(row =>
       `<tr><td>${escapeHtml(row.transaction_id)}</td><td>${escapeHtml(row.pattern_text)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.algorithm)}</td><td>${escapeHtml(row.match_count)}</td><td>${escapeHtml(row.positions)}</td><td>${badge(escapeHtml(row.risk_level))}</td><td>${escapeHtml(row.detected_at)}</td></tr>`
     ).join('') || '<tr><td colspan="8">No detection history.</td></tr>';

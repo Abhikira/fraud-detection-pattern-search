@@ -169,6 +169,28 @@ textarea::placeholder, input::placeholder { color: #879499; }
 .review-note strong { color: var(--ink); }
 .message { min-height: 20px; margin: 10px 0 0; color: #a43828; font-size: 13px; }
 .results { margin-top: 18px; }
+.report-dialog {
+  width: min(820px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(85vh, 900px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+.report-dialog::backdrop { background: rgb(17 24 28 / 58%); }
+.report-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.report-dialog-header h2 { margin: 0; font-size: 19px; }
+.report-dialog > .results { max-height: calc(85vh - 66px); margin: 0; padding: 16px; overflow-y: auto; }
 .result-card { margin-bottom: 12px; padding: 18px 20px; border: 1px solid var(--line); background: var(--surface); }
 .result-heading { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 9px; font-size: 12px; }
 .result-description { margin: 0 0 8px; overflow-wrap: anywhere; }

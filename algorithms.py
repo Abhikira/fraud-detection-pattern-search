@@ -1,8 +1,5 @@
 """Custom KMP and Rabin-Karp string matching (case-insensitive)."""
-
-
 def build_lps(pattern):
-    """Longest Prefix-Suffix array used by KMP."""
     lps = [0] * len(pattern)
     length, i = 0, 1
     while i < len(pattern):
@@ -19,7 +16,6 @@ def build_lps(pattern):
 
 
 def kmp_search(text, pattern):
-    """Return all start indices of pattern in text."""
     text, pattern = text.lower(), pattern.lower()
     n, m = len(text), len(pattern)
     if m == 0 or m > n:
@@ -40,7 +36,6 @@ def kmp_search(text, pattern):
 
 
 def rabin_karp_search(text, pattern, base=256, mod=1_000_000_007):
-    """Rolling-hash search; each hash hit is verified character by character."""
     text, pattern = text.lower(), pattern.lower()
     n, m = len(text), len(pattern)
     if m == 0 or m > n:

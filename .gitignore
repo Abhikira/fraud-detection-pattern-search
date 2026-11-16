@@ -3,3 +3,7 @@
 instance/
 __pycache__/
 *.py[cod]
+.vs/
+node_modules/
+*.sqlite3
+*.db

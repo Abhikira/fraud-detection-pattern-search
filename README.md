@@ -9,7 +9,7 @@
 2. Copy `.env.example` to `.env` and set a private, random `FLASK_SECRET_KEY`. The app loads this file at startup; never commit `.env`.
 3. Run `python app.py` from the activated environment → open http://127.0.0.1:5000
 
-SQLite is the default and requires no separate service or password. The app creates `instance/fraud_detection.sqlite3`, its tables, and the starter phrase library automatically when the database is first used.
+SQLite is the default and requires no separate service or password. The app creates `instance/fraud_detection.sqlite3`, its tables, and the 123-phrase starter library automatically when the database is first used.
 
 To use MySQL instead, set `DB_ENGINE=mysql` in `.env`, configure `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`, and initialize the schema from PowerShell with `cmd /c "mysql -u root -p < schema.sql"`.
 
@@ -22,7 +22,7 @@ For an existing MySQL database created with the earlier `transaction_text`, `alg
 
 These migrations apply only to existing MySQL databases; SQLite setup is automatic.
 
-The app uses KMP and Rabin-Karp phrase matching; it does not train a machine-learning model. Privacy and Terms pages are available at `/privacy` and `/terms`.
+Manual scans request an account reference and description; the transaction amount is not requested. CSV uploads require `account_ref` and `description`, and may include an optional `amount` column. Scan reports open in a popup. The app uses KMP and Rabin-Karp phrase matching; it does not train a machine-learning model. Privacy and Terms pages are available at `/privacy` and `/terms`.
 
 ## Before exposing an installation
 

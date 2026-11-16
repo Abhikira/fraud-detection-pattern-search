@@ -48,6 +48,12 @@ class SQLiteIntegrationTests(unittest.TestCase):
     def test_database_creation_auth_scan_dashboard_and_admin_features(self):
         user_id, user_csrf = self.register(self.user_client, "person@gmail.com")
         self.assertTrue(os.path.isfile(self.database_path))
+        seeded_patterns = self.user_client.get("/api/patterns")
+        self.assertEqual(len(seeded_patterns.json), 123)
+        self.assertTrue(any(
+            pattern["pattern_text"] == "suspicious activity on your account"
+            for pattern in seeded_patterns.json
+        ))
         denied_edit = self.user_client.patch(
             "/api/patterns/1",
             json={"pattern_text": "unauthorized edit", "severity": "HIGH"},
@@ -59,20 +65,23 @@ class SQLiteIntegrationTests(unittest.TestCase):
             "/api/analyze",
             json={"transactions": [{
                 "account_ref": "ACC-1",
-                "amount": "1250.25",
-                "description": "urgent wire transfer for review",
+                "description": "urgent wire transfer and suspicious activity on your account",
             }]},
             headers={"X-CSRF-Token": user_csrf},
         )
         self.assertEqual(scan.status_code, 200)
         self.assertEqual(scan.json["results"][0]["risk"], "HIGH")
+        self.assertTrue(any(
+            match["pattern"] == "suspicious activity on your account"
+            for match in scan.json["results"][0]["matches"]
+        ))
 
         stats = self.user_client.get("/api/stats")
         transactions = self.user_client.get("/api/transactions")
         detections = self.user_client.get("/api/detections")
         self.assertEqual(stats.status_code, 200)
         self.assertEqual(stats.json["transactions"], 1)
-        self.assertEqual(transactions.json[0]["amount"], 1250.25)
+        self.assertEqual(transactions.json[0]["amount"], 0.0)
         self.assertGreater(len(detections.json), 0)
 
         admin_id, admin_csrf = self.register(self.admin_client, "admin@gmail.com")

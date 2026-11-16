@@ -19,7 +19,7 @@
     <p class="updated">Last reviewed: 13 November 2026</p>
     <article>
       <h2>Information this application handles</h2>
-      <p>When you scan transactions, the application receives the account reference, amount, and description that you submit, either as pasted text or as CSV rows. It stores accepted transaction records and matching detection results in the MySQL database configured by the operator. Pattern phrases, their categories, and severity settings are also stored there.</p>
+      <p>Manual scans collect the account reference and description. CSV uploads require those columns; an optional amount column is accepted for compatibility. Accepted transaction records and matching detection results are stored in the database configured by the operator. Pattern phrases, their categories, and severity settings are also stored there.</p>
       <p>For registered users, the database stores an email address, account role and status, and a salted password hash. Passwords are not stored as plaintext. Sign-in uses a session cookie. Registration is limited to Gmail and Proton email domains, but addresses are not verified.</p>
       <h2>How information is used</h2>
       <p>Submitted information is used to compare descriptions against the configured pattern library, display scan results, and populate the transaction and detection history. A match is a text comparison and should not be treated as a conclusion that a person or transaction is fraudulent.</p>
