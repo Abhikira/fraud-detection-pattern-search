@@ -1,6 +1,6 @@
-account_ref,description,amount
-ACC-1001,Monthly rent payment to landlord,12000
-ACC-1002,URGENT WIRE TRANSFER needed - buy gift card and send code now,45000
-ACC-1003,Congratulations lottery winner! Pay refund processing fee to claim,2500
-ACC-1004,Crypto investment with guaranteed returns - act now,80000
-ACC-1005,Please verify your account and share the OTP received,999
+account_ref,description
+ACC-1001,Monthly rent payment to landlord
+ACC-1002,URGENT WIRE TRANSFER needed - buy gift card and send code now
+ACC-1003,Congratulations lottery winner! Pay refund processing fee to claim
+ACC-1004,Crypto investment with guaranteed returns - act now
+ACC-1005,Please verify your account and share the OTP received

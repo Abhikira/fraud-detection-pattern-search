@@ -72,6 +72,7 @@ class SQLiteIntegrationTests(unittest.TestCase):
         detections = self.user_client.get("/api/detections")
         self.assertEqual(stats.status_code, 200)
         self.assertEqual(stats.json["transactions"], 1)
+        self.assertEqual(stats.json["patterns"], 123)
         self.assertEqual(transactions.json[0]["amount"], 1250.25)
         self.assertGreater(len(detections.json), 0)
 

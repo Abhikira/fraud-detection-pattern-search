@@ -50,8 +50,6 @@
           <form id="scan-form">
             <label class="field-label" for="account_ref">Account number or reference</label>
             <input id="account_ref" name="account_ref" maxlength="50" placeholder="ACC-2041" required>
-            <label class="field-label transaction-label" for="amount">Transaction amount</label>
-            <input id="amount" name="amount" type="number" min="0" step="0.01" placeholder="1250.00" required>
             <label class="field-label transaction-label" for="txt">Transaction description</label>
             <textarea id="txt" placeholder="Describe the transaction" required></textarea>
             <div class="form-actions">
@@ -67,7 +65,7 @@
           <div class="divider"><span>or scan a file</span></div>
           <form id="upload-form" class="upload-form">
             <label class="field-label" for="file">CSV file</label>
-            <p class="field-help">Expected columns: account_ref, description, amount.</p>
+            <p class="field-help">Expected columns: account_ref, description. An amount column is optional.</p>
             <div class="form-actions upload-actions">
               <input type="file" id="file" accept=".csv,text/csv" required>
               <button class="button button-secondary" type="submit">Upload and scan</button>
@@ -77,7 +75,6 @@
           <p class="review-note"><strong>For review:</strong> a text match is a signal, not proof of fraud.</p>
         </div>
       </div>
-      <div id="out" class="results" aria-live="polite"></div>
     </section>
 
     <section id="dash" class="panel" aria-labelledby="dashboard-title" hidden>
@@ -89,7 +86,7 @@
       <div class="stats" id="stats"></div>
       <div class="card table-card">
         <div class="table-heading"><div><p class="eyebrow">Latest records</p><h3>Stored transactions</h3></div><span>Most recent 200</span></div>
-        <div class="table-scroll"><table><thead><tr><th>ID</th><th>Transaction</th><th>Amount</th><th>Time</th><th>Matches</th><th>Risk</th></tr></thead><tbody id="tx"></tbody></table></div>
+        <div class="table-scroll"><table><thead><tr><th>ID</th><th>Transaction</th><th>Time</th><th>Matches</th><th>Risk</th></tr></thead><tbody id="tx"></tbody></table></div>
       </div>
       <div class="card table-card">
         <div class="table-heading"><div><p class="eyebrow">Latest records</p><h3>Detection history</h3></div><span>Most recent 300</span></div>
@@ -133,6 +130,16 @@
     </section>
     {% endif %}
   </main>
+
+  <dialog id="result-dialog" class="result-dialog" aria-labelledby="result-dialog-title">
+    <div class="result-dialog-header">
+      <h2 id="result-dialog-title">Scan results</h2>
+      <form method="dialog">
+        <button class="button button-small" type="submit">Close</button>
+      </form>
+    </div>
+    <div id="out" class="results" aria-live="polite"></div>
+  </dialog>
 
   <footer class="footer">
     <span>Detectorite transaction review</span>

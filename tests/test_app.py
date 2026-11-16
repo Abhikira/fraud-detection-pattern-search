@@ -106,6 +106,10 @@ class AppRouteTests(unittest.TestCase):
             response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Detectorite", response.data)
+        self.assertIn(b'<dialog id="result-dialog"', response.data)
+        self.assertIn(b'<div id="out" class="results"', response.data)
+        self.assertNotIn(b'id="amount"', response.data)
+        self.assertNotIn(b"<th>Amount</th>", response.data)
 
     def test_registration_hashes_password_and_grants_configured_admin(self):
         connection = FakeConnection()
@@ -279,6 +283,22 @@ class AppRouteTests(unittest.TestCase):
         self.assertEqual(connection.detections[0][4], "4")
         self.assertEqual(connection.detections[0][5], "HIGH")
         self.assertTrue(connection.committed)
+
+    def test_analyze_accepts_transaction_without_amount(self):
+        self.authenticate()
+        connection = FakeConnection()
+        with patch.object(fraud_app, "query", side_effect=self.auth_query()), patch.object(
+            fraud_app, "conn", return_value=connection
+        ):
+            response = self.client.post("/api/analyze", json={
+                "transactions": [{
+                    "account_ref": "ACC-1",
+                    "description": "Review this payment",
+                }],
+            }, headers={"X-CSRF-Token": CSRF})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(connection.operations[1][1][3], 0)
 
     def test_analyze_rejects_invalid_amounts_and_malformed_csv(self):
         self.authenticate()

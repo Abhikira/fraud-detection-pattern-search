@@ -172,6 +172,13 @@ textarea::placeholder, input::placeholder { color: #879499; }
 .result-card { margin-bottom: 12px; padding: 18px 20px; border: 1px solid var(--line); background: var(--surface); }
 .result-heading { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 9px; font-size: 12px; }
 .result-description { margin: 0 0 8px; overflow-wrap: anywhere; }
+.result-dialog { width: min(760px, calc(100% - 32px)); max-height: 80vh; padding: 0; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.result-dialog::backdrop { background: rgb(20 30 33 / 55%); }
+.result-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+.result-dialog-header h2 { margin: 0; font-size: 18px; }
+.result-dialog-header form { margin: 0; }
+.result-dialog .results { margin-top: 0; }
+.result-dialog .table-card { margin: 0; border: 0; }
 mark { padding: 1px 2px; background: #f6d69d; color: #392b10; }
 .chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .chip { padding: 4px 7px; border: 1px solid var(--line); color: #44535a; font-size: 11px; }
