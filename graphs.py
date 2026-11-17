@@ -17,7 +17,7 @@ def measure_time(algorithm, text, pattern, repeats=7):
         end = time.perf_counter()
         times.append(end - start)
     return median(times)
-
+ 
 input_sizes = [1000, 5000, 10000, 20000, 40000, 80000, 120000, 160000]
 pattern = "fraud_pattern_not_present_2026"
 
