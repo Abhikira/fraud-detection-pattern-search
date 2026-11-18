@@ -2,6 +2,17 @@
 
 1. # Fraud Detection Pattern Search System
 
+
+## Demo Credentials
+
+Admin ID: abc@gmail.com 
+Password: WHr4adBKw--AytmZwNY6mWhBFzqgGg8S
+
+
+User ID : qa-e563f50e@proton.me 
+password: Q_bqJBCrupA03E8Zxa8NeZYb
+
+
 ## About the Project
 
 The **Fraud Detection Pattern Search System** is a Python-based web application that identifies potentially suspicious transactions by searching transaction descriptions for predefined fraud-related keywords and phrases.
@@ -62,6 +73,9 @@ Both algorithms support case-insensitive matching and multiple occurrences.
 5. Matching phrases and their positions are identified.
 6. A risk level is assigned based on detected patterns.
 7. Results are stored and displayed on the dashboard.
+
+
+
 
 ## Installation
 
