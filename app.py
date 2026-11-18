@@ -34,7 +34,7 @@ if not os.path.isabs(DB_PATH):
     DB_PATH = os.path.join(BASE_DIR, DB_PATH)
 DB = dict(host=os.getenv("DB_HOST", "localhost"), user=os.getenv("DB_USER", "root"),
           password=os.getenv("DB_PASSWORD", ""), database=os.getenv("DB_NAME", "fraud_detection"))
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "abc@gmail.com").strip().lower()
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "arv.22139893@gmail.com").strip().lower()
 EMAIL_DOMAINS = {"gmail.com", "proton.me", "protonmail.com", "protonmail.ch", "pm.me"}
 RANK = {"LOW": 1, "MEDIUM": 2, "HIGH": 3}
 PUBLIC_ENDPOINTS = {"signin", "register", "privacy", "terms", "static"}
@@ -112,7 +112,26 @@ def initialize_sqlite_database():
         finally:
             connection.close()
         _SQLITE_INITIALIZED.add(DB_PATH)
+def initialize_admin():
+    email = ADMIN_EMAIL
+    if not email:
+        return
 
+    connection = conn()
+    try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT id, role FROM users WHERE email=%s", (email,))
+        user = cursor.fetchone()
+
+        if user:
+            cursor.execute(
+                "UPDATE users SET role='ADMIN' WHERE email=%s",
+                (email,),
+            )
+
+        connection.commit()
+    finally:
+        connection.close()
 
 def conn():
     if DB_ENGINE == "sqlite":
