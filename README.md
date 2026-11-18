@@ -4,14 +4,12 @@
 
 
 ## Demo Credentials
+Admin Id: arv.22139893@gmail.com
+Password: 123456789
 
-Admin ID: abc@gmail.com 
+
+User Id: abc@gmail.com 
 Password: WHr4adBKw--AytmZwNY6mWhBFzqgGg8S
-
-
-User ID : qa-e563f50e@proton.me 
-password: Q_bqJBCrupA03E8Zxa8NeZYb
-
 
 ## About the Project
 
