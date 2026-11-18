@@ -367,9 +367,16 @@ def signin():
         "SELECT id, email, password_hash, role, is_active FROM users WHERE email=%s",
         (email,),
     )
-    if not users or not users[0]["is_active"] or not check_password_hash(
-        users[0]["password_hash"], password
-    ):
+    if not users:
+        app.logger.warning("Login failed: user not found")
+        return render_auth("signin.html", "Email or password is incorrect.", 401, email)
+
+    if not users[0]["is_active"]:
+        app.logger.warning("Login failed: inactive account")
+        return render_auth("signin.html", "Account is inactive.", 401, email)
+
+    if not check_password_hash(users[0]["password_hash"], password):
+        app.logger.warning("Login failed: password verification failed")
         return render_auth("signin.html", "Email or password is incorrect.", 401, email)
     set_login_session(users[0])
     return redirect(url_for("index"))
